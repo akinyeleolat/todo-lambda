@@ -10,11 +10,5 @@
         "allowEmpty": false
       },
       "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
-    "completed": {
-      "type": "boolean"
     }
   }

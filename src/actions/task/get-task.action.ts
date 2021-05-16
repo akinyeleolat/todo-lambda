@@ -7,7 +7,6 @@ import {
 import 'source-map-support/register';
 
 // Models
-import ListModel from '../../models/list.model';
 import ResponseModel from '../../models/response.model';
 
 // Services
@@ -17,9 +16,13 @@ import DatabaseService from '../../services/database.service';
 import { validateAgainstConstraints } from '../../utils/util';
 
 // Define the request constraints
-import requestConstraints from '../../constraints/list/create.constraint.json';
+import requestConstraints from '../../constraints/task/get.constraint.json';
 
-export const createList: APIGatewayProxyHandler = (
+// Enums
+import { StatusCode } from '../../enums/status-code.enum';
+import { ResponseMessage } from '../../enums/response-message.enum';
+
+export const getTask: APIGatewayProxyHandler = async (
   event: APIGatewayEvent,
   _context: Context
 ): Promise<APIGatewayProxyResult> => {
@@ -29,38 +32,33 @@ export const createList: APIGatewayProxyHandler = (
   // Parse request parameters
   const requestData = JSON.parse(event.body);
 
+  // Initialise database service
+  const databaseService = new DatabaseService();
+
+  // Destructure request data
+  const { taskId, listId } = requestData;
+
+  // Destructure process.env
+  const { TASKS_TABLE } = process.env;
+
   // Validate against constraints
   return validateAgainstConstraints(requestData, requestConstraints)
-    .then(async () => {
-      // Initialise database service
-      const databaseService = new DatabaseService();
-
-      // Initialise and hydrate model
-      const listModel = new ListModel(requestData);
-
-      // Get model data
-      const data = listModel.getEntityMappings();
-
-      // Initialise DynamoDB PUT parameters
-      const params = {
-        TableName: process.env.LIST_TABLE,
-        Item: {
-          id: data.id,
-          name: data.name,
-          createdAt: data.timestamp,
-          updatedAt: data.timestamp,
-        },
-      };
-      // Inserts item into DynamoDB table
-      await databaseService.create(params);
-      return data.id;
+    .then(() => {
+      // Get item from the DynamoDB table
+      // if it exists
+      return databaseService.getItem({
+        key: taskId,
+        hash: 'listId',
+        hashValue: listId,
+        tableName: TASKS_TABLE,
+      });
     })
-    .then((listId) => {
+    .then((data) => {
       // Set Success Response
       response = new ResponseModel(
-        { listId },
-        200,
-        'To-do list successfully created'
+        { ...data.Item },
+        StatusCode.OK,
+        ResponseMessage.GET_TASK_SUCCESS
       );
     })
     .catch((error) => {
@@ -68,7 +66,11 @@ export const createList: APIGatewayProxyHandler = (
       response =
         error instanceof ResponseModel
           ? error
-          : new ResponseModel({}, 500, 'To-do list cannot be created');
+          : new ResponseModel(
+              {},
+              StatusCode.ERROR,
+              ResponseMessage.GET_TASK_FAIL
+            );
     })
     .then(() => {
       // Return API Response
