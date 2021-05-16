@@ -4,7 +4,7 @@ import type { AWS } from '@serverless/typescript';
 import dynamoDbTables from './resources/dynamodb-tables';
 
 // Functions
-// import functions from './resources/functions';
+import functions from './resources/functions';
 
 const serverlessConfiguration: AWS = {
   service: 'serverless-todo',
@@ -39,18 +39,13 @@ const serverlessConfiguration: AWS = {
       babelOptions: {
         presets: ["env"]
       }
-    },
-    profile: {
-      prod: 'prodAccount',
-      dev: 'devAccount'
     }
   },
   plugins: [
     'serverless-bundle',
     'serverless-dynamodb-local',
-    'serverless-dynamodb-autoscaling',
-    'serverless-offline',
     'serverless-dotenv-plugin',
+    'serverless-offline',
   ],
   package: {
     individually: true,
@@ -58,8 +53,6 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
-    stage: 'dev',
-    region: 'eu-west-1',
     apiGateway: {
       shouldStartNameWithService: true,
       minimumCompressionSize: 1024,
@@ -88,10 +81,9 @@ const serverlessConfiguration: AWS = {
           {"Fn::GetAtt": [ 'TasksTable', 'Arn' ]}
         ]
       }
-    ],
-    profile: '${self:custom.profile.${self:custom.stage}}'
+    ]
   },
-  // functions,
+  functions: functions,
   resources: {
     Resources: dynamoDbTables,
   }
