@@ -1,4 +1,4 @@
-import { Status } from "../enums/status.enum";
+import { Status } from '../enums/status.enum';
 // Interfaces
 type ResponseHeader = { [header: string]: string | number | boolean };
 interface IResponseBody {
@@ -20,9 +20,9 @@ const STATUS_MESSAGES = {
 };
 
 const RESPONSE_HEADERS: ResponseHeader = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-  "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+  'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
 };
 
 /**
@@ -30,6 +30,7 @@ const RESPONSE_HEADERS: ResponseHeader = {
  */
 export default class ResponseModel {
   private body: IResponseBody;
+
   private code: number;
 
   /**
@@ -38,10 +39,10 @@ export default class ResponseModel {
    * @param code
    * @param message
    */
-  constructor(data = {}, code = 402, message = "") {
+  constructor(data = {}, code = 402, message = '') {
     this.body = {
-      data: data,
-      message: message,
+      data,
+      message,
       status: STATUS_MESSAGES[code],
     };
     this.code = code;

@@ -18,6 +18,10 @@ import { validateAgainstConstraints } from '../../utils/util';
 // Define the request constraints
 import requestConstraints from '../../constraints/list/update.constraint.json';
 
+// Enums
+import { StatusCode } from '../../enums/status-code.enum';
+import { ResponseMessage } from '../../enums/response-message.enum';
+
 export const updateList: APIGatewayProxyHandler = (
   event: APIGatewayEvent,
   _context: Context
@@ -66,8 +70,8 @@ export const updateList: APIGatewayProxyHandler = (
       // Set Success Response
       response = new ResponseModel(
         { ...results.Attributes },
-        200,
-        'To-do list successfully updated'
+        StatusCode.OK,
+        ResponseMessage.UPDATE_LIST_SUCCESS
       );
     })
     .catch((error) => {
@@ -75,11 +79,14 @@ export const updateList: APIGatewayProxyHandler = (
       response =
         error instanceof ResponseModel
           ? error
-          : new ResponseModel({}, 500, 'To-do list cannot be updated');
+          : new ResponseModel(
+              {},
+              StatusCode.ERROR,
+              ResponseMessage.UPDATE_LIST_FAIL
+            );
     })
     .then(() => {
       // Return API Response
       return response.generate();
     });
 };
-//TODO: change literals to enums

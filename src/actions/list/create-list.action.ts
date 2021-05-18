@@ -19,6 +19,10 @@ import { validateAgainstConstraints } from '../../utils/util';
 // Define the request constraints
 import requestConstraints from '../../constraints/list/create.constraint.json';
 
+// Enums
+import { StatusCode } from '../../enums/status-code.enum';
+import { ResponseMessage }  from '../../enums/response-message.enum';
+
 export const createList: APIGatewayProxyHandler = (
   event: APIGatewayEvent,
   _context: Context
@@ -59,8 +63,8 @@ export const createList: APIGatewayProxyHandler = (
       // Set Success Response
       response = new ResponseModel(
         { listId },
-        200,
-        'To-do list successfully created'
+        StatusCode.OK,
+        ResponseMessage.CREATE_LIST_SUCCESS
       );
     })
     .catch((error) => {
@@ -68,7 +72,11 @@ export const createList: APIGatewayProxyHandler = (
       response =
         error instanceof ResponseModel
           ? error
-          : new ResponseModel({}, 500, 'To-do list cannot be created');
+          : new ResponseModel(
+              {},
+              StatusCode.ERROR,
+              ResponseMessage.CREATE_LIST_FAIL
+            );
     })
     .then(() => {
       // Return API Response

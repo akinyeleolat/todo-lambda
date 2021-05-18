@@ -1,4 +1,4 @@
-import { v4 as UUID } from "uuid";
+import { v4 as UUID } from 'uuid';
 
 // Interfaces
 interface IProps {
@@ -7,20 +7,24 @@ interface IProps {
   description: string;
   completed: boolean;
 }
+
 interface ITaskInterface extends IProps {
   timestamp: number;
 }
 
 export default class TaskModel {
   private _id: string;
+
   private _listId: string;
+
   private _description: string;
+
   private _completed: boolean;
 
   constructor({
     id = UUID(),
     listId,
-    description = "",
+    description = '',
     completed = false,
   }: IProps) {
     this._id = id;
@@ -34,7 +38,7 @@ export default class TaskModel {
    * @param value
    */
   setId(value: string) {
-    this._id = value !== "" ? value : null;
+    this._id = value !== '' ? value : null;
   }
 
   /**
@@ -50,7 +54,7 @@ export default class TaskModel {
    * @param value
    */
   setListId(value: string) {
-    this._listId = value !== "" ? value : null;
+    this._listId = value !== '' ? value : null;
   }
 
   /**
@@ -65,8 +69,8 @@ export default class TaskModel {
    * Set Description
    * @param value
    */
-  setDescription(value: string) {
-    this._description = value ? value : null;
+  setDescription(value: string = null) {
+    this._description = value;
   }
 
   /**
@@ -81,8 +85,8 @@ export default class TaskModel {
    * Set Completed
    * @param value
    */
-  setCompleted(value: boolean) {
-    this._completed = value ? value : null;
+  setCompleted(value: boolean = null) {
+    this._completed = value;
   }
 
   /**
