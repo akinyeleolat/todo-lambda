@@ -35,7 +35,7 @@ export const deleteTask: APIGatewayProxyHandler = async (
   const { taskId, listId } = requestData;
 
   // Destructure process.env
-  const { LIST_TABLE, TASKS_TABLE } = process.env;
+  const { TASKS_TABLE } = process.env;
 
   // Validate against constraints
   return validateAgainstConstraints(requestData, requestConstraints)
@@ -55,7 +55,7 @@ export const deleteTask: APIGatewayProxyHandler = async (
         TableName: TASKS_TABLE,
         Key: {
           id: taskId,
-          listId: listId,
+          listId,
         },
       };
       // Delete task from db

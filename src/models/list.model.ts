@@ -1,4 +1,4 @@
-import { v4 as UUID } from "uuid";
+import { v4 as UUID } from 'uuid';
 
 // Interfaces
 interface IProps {
@@ -12,9 +12,10 @@ interface IListInterface extends IProps {
 
 export default class ListModel {
   private _id: string;
+
   private _name: string;
 
-  constructor({ id = UUID(), name = "" }: IProps) {
+  constructor({ id = UUID(), name = '' }: IProps) {
     this._id = id;
     this._name = name;
   }
@@ -24,7 +25,7 @@ export default class ListModel {
    * @param value
    */
   setId(value: string) {
-    this._id = value !== "" ? value : null;
+    this._id = value !== '' ? value : null;
   }
 
   /**
@@ -40,7 +41,7 @@ export default class ListModel {
    * @param value
    */
   setName(value: string) {
-    this._name = value !== "" ? value : null;
+    this._name = value !== '' ? value : null;
   }
 
   /**

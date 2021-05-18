@@ -17,6 +17,9 @@ import { validateAgainstConstraints } from '../../utils/util';
 
 // Define the request constraints
 import requestConstraints from '../../constraints/list/get.constraint.json';
+// Enums
+import { StatusCode } from '../../enums/status-code.enum';
+import { ResponseMessage } from '../../enums/response-message.enum';
 
 export const getList: APIGatewayProxyHandler = (
   event: APIGatewayEvent,
@@ -72,10 +75,10 @@ export const getList: APIGatewayProxyHandler = (
         {
           ...data.Item,
           taskCount: tasks?.length,
-          tasks: tasks,
+          tasks,
         },
-        200,
-        'To-do list successfully retrieved'
+        StatusCode.OK,
+        ResponseMessage.GET_LIST_SUCCESS
       );
     })
     .catch((error) => {
@@ -83,7 +86,11 @@ export const getList: APIGatewayProxyHandler = (
       response =
         error instanceof ResponseModel
           ? error
-          : new ResponseModel({}, 500, 'To-do list not found');
+          : new ResponseModel(
+              {},
+              StatusCode.ERROR,
+              ResponseMessage.GET_LIST_FAIL
+            );
     })
     .then(() => {
       // Return API Response

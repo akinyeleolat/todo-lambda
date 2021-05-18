@@ -61,7 +61,7 @@ export const updateTask: APIGatewayProxyHandler = (
           TableName: TASKS_TABLE,
           Key: {
             id: taskId,
-            listId: listId,
+            listId,
           },
           UpdateExpression: updateExpression,
           ExpressionAttributeValues: {

@@ -18,6 +18,10 @@ import { validateAgainstConstraints, createChunks } from '../../utils/util';
 // Define the request constraints
 import requestConstraints from '../../constraints/list/get.constraint.json';
 
+// Enums
+import { StatusCode } from '../../enums/status-code.enum';
+import { ResponseMessage } from '../../enums/response-message.enum';
+
 export const deleteList: APIGatewayProxyHandler = (
   event: APIGatewayEvent,
   _context: Context
@@ -97,14 +101,22 @@ export const deleteList: APIGatewayProxyHandler = (
     })
     .then(() => {
       // Set Success Response
-      response = new ResponseModel({}, 200, 'To-do list successfully deleted');
+      response = new ResponseModel(
+        {},
+        StatusCode.OK,
+        ResponseMessage.DELETE_LIST_SUCCESS
+      );
     })
     .catch((error) => {
       // Set Error Response
       response =
         error instanceof ResponseModel
           ? error
-          : new ResponseModel({}, 500, 'To-do list cannot be deleted');
+          : new ResponseModel(
+              {},
+              StatusCode.ERROR,
+              ResponseMessage.DELETE_LIST_FAIL
+            );
     })
     .then(() => {
       // Return API Response
